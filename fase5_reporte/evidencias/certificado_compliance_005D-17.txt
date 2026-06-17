@@ -1,0 +1,4 @@
+Certificado de Conformidad - 2026-06-17 19:00:12.872705
+Alumno: Bruno Urrea Ortiz (005D-17)
+Estado: AUDITORÍA APROBADA - CONFORME
+Protocolos validados: NETCONF, RESTCONF, Ansible.
