@@ -1,0 +1,17 @@
+alumno:
+  codigo: "005D-17"
+  nombre: "Bruno Urrea Ortiz"
+cliente:
+  empresa: "Consultora Digital Norte SA"
+  hostname: "RTR-CONDIG"
+router:
+  ip: "192.168.10.1"
+  usuario: "cisco"
+  password: "cisco123!"
+  loopback_id: 10
+  loopback_ip: "10.5.17.1"
+  loopback_mask: "255.255.255.0"
+  loopback_prefix: "24"
+  descripcion_wan: "Enlace-WAN-Los-Angeles"
+  banner: "ACCESO RESTRINGIDO - CONDIG"
+  ntp_server: "1.1.1.1"
