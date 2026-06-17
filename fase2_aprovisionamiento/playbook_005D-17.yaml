@@ -1,0 +1,54 @@
+---
+- name: Aprovisionamiento Corporativo EP3
+  hosts: routers
+  gather_facts: no
+  vars_files:
+    - ../vars/vars_005D-17.yaml
+
+  tasks:
+    - name: 1. Respaldar la configuracion actual
+      cisco.ios.ios_command:
+        commands: show running-config
+      register: backup_config
+
+    - name: Guardar respaldo localmente en la carpeta requerida
+      copy:
+        content: "{{ backup_config.stdout[0] }}"
+        dest: "../respaldo/backup_{{ alumno.codigo }}.cfg"
+      changed_when: false
+
+    - name: 2. Habilitar NETCONF, RESTCONF y HTTP seguro
+      cisco.ios.ios_config:
+        lines:
+          - netconf-yang
+          - restconf
+          - ip http secure-server
+          - ip http authentication local
+
+    - name: 3. Configurar hostname corporativo
+      cisco.ios.ios_config:
+        lines:
+          - "hostname {{ cliente.hostname }}"
+
+    - name: 4. Configurar banner de acceso
+      cisco.ios.ios_config:
+        lines:
+          - "banner motd ^{{ router.banner }}^"
+      when: "router.banner not in backup_config.stdout[0]"
+
+    - name: 5. Configurar servidor NTP
+      cisco.ios.ios_config:
+        lines:
+          - "ntp server {{ router.ntp_server }}"
+
+    - name: 6. Configurar descripcion WAN en GigabitEthernet1
+      cisco.ios.ios_config:
+        parents: interface GigabitEthernet1
+        lines:
+          - "description {{ router.descripcion_wan }}"
+
+    - name: 7. Crear interfaz Loopback con IP de gestion
+      cisco.ios.ios_config:
+        parents: "interface Loopback{{ router.loopback_id }}"
+        lines:
+          - "ip address {{ router.loopback_ip }} {{ router.loopback_mask }}"
