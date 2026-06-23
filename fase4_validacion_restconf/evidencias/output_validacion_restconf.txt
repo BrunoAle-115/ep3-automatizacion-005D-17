@@ -1,0 +1,14 @@
+=== METADATOS DE EJECUCIÓN ===
+Script: validacion_restconf_005D-17.py
+Fecha/Hora: 2026-06-23 16:40:27
+Hostname VM: labvm
+==============================
+
+--- Iniciando Auditoría RESTCONF ---
+[OK] Hostname: RTR-CONDIG
+[OK] Loopback: 10.5.17.1
+[OK] Interfaces: Enlace-WAN-Los-Angeles
+[OK] Ntp: 1.1.1.1
+
+--- Resultado Final ---
+4/4 [OK] - CONFORME
