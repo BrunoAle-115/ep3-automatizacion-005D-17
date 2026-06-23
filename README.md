@@ -1,24 +1,43 @@
-# Proyecto de Automatización de Redes - Consultora Digital Norte SA
-**Alumno:** Bruno Urrea Ortiz (005D-17)  
-**Institución:** Duoc UC - Ingeniería en Conectividad y Redes
+# Informe Técnico de Implementación - Consultora Digital Norte SA
 
-## Descripción del Proyecto
-Implementación de un ciclo de vida de automatización para infraestructura de red utilizando Cisco IOS-XE, Ansible, Genie (pyATS), NETCONF y RESTCONF.
+**Ingeniero de Automatización:** Bruno Urrea Ortiz (005D-17)
 
-## Diagrama de Flujo del Proceso
+## 1. Objetivo del proyecto
+Se implementó un ciclo completo de automatización de red para integrar un nuevo router a la infraestructura de Consultora Digital Norte SA. El objetivo final fue asegurar el aprovisionamiento estandarizado, validando de forma programática que el equipo cumpla con las normativas corporativas antes de su paso a producción.
 
+## 2. Alcance
+El proyecto abarcó el respaldo del estado inicial, la habilitación de protocolos de gestión y la inyección de la configuración base (hostname, interfaces, banners y sincronización de tiempo). Quedaron fuera del alcance las configuraciones de enrutamiento dinámico, políticas de firewall y calidad de servicio (QoS). El trabajo se limitó a interacciones automatizadas, excluyendo configuraciones manuales por CLI en la fase de despliegue.
 
-## Fases del Proyecto
-1. **Fase 1 (Baseline):** Captura de estado inicial mediante Genie y pyATS.
-2. **Fase 2 (Aprovisionamiento):** Despliegue de configuración corporativa mediante Ansible con idempotencia total (`changed=0`).
-3. **Fase 3 (Validación NETCONF):** Auditoría de parámetros mediante XML sobre el puerto 830.
-4. **Fase 4 (Validación RESTCONF):** Auditoría de API mediante JSON sobre el puerto 443.
-5. **Fase 5 (Compliance):** Generación de certificado de auditoría final.
+## 3. Infraestructura utilizada
+* **Estación de control:** DEVASC VM (Ubuntu Linux).
+* **Dispositivo de red:** Router Cisco CSR1000v virtualizado.
+* **Sistema Operativo del Router:** Cisco IOS-XE.
+* **Herramientas de software:** pyATS/Genie, Ansible, Python 3 (librerías `ncclient` y `requests`).
 
-## Resultados
-* Estado final: **CONFORME**
-* Todas las tareas de Ansible cumplen con el principio de idempotencia.
-* Protocolos de gestión validados exitosamente.
+## 4. Tecnologías empleadas y justificación
+* **pyATS / Genie:** Se utilizó para capturar el *baseline* inicial y el estado final del equipo, ya que permite documentar el estado operativo conectándose vía SSH estándar sin depender de APIs previamente habilitadas.
+* **Ansible:** Se eligió para la fase de aprovisionamiento por su enfoque declarativo, permitiendo aplicar la configuración completa garantizando la idempotencia del proceso.
+* **NETCONF:** Se utilizó para la auditoría profunda de la configuración aplicada, ya que permite extraer la jerarquía completa del sistema en formato XML estructurado respaldado por modelos YANG.
+* **RESTCONF:** Se implementó como segunda capa de validación para consultar recursos específicos de la API del router mediante peticiones HTTPS, obteniendo respuestas ágiles en formato JSON.
 
----
-*Proyecto desarrollado para la evaluación EP3 de Automatización.*
+## 5. Configuración aplicada
+A continuación, se detallan los parámetros inyectados en el dispositivo corporativo:
+
+| Parámetro | Valor Aplicado |
+| :--- | :--- |
+| Hostname | RTR-CONDIG |
+| IP Loopback Gestión | 10.5.17.1 |
+| Máscara Loopback | 255.255.255.0 |
+| Descripción WAN | Enlace-WAN-Los-Angeles |
+| Servidor NTP | 1.1.1.1 |
+
+## 6. Resultados de validación
+La auditoría independiente arrojó los siguientes resultados:
+
+| Criterio Evaluado | Protocolo | Resultado |
+| :--- | :--- | :--- |
+| Parámetros Base | NETCONF (Puerto 830) | CONFORME |
+| Estado Operativo API | RESTCONF (Puerto 443) | CONFORME |
+
+## 7. Conclusiones
+El equipo ha sido aprovisionado exitosamente y ha superado todas las auditorías de estado. La infraestructura refleja un estado 100% idempotente y alineado con el modelo de datos de la empresa. El router se declara **CONFORME** y está listo para ser entregado a la unidad de operaciones para su puesta en producción.
